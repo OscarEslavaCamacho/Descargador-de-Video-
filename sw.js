@@ -2,8 +2,7 @@ const CACHE_NAME = 'v1_media_downloader';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
-  './icon-512.png'
+  './manifest.json'
 ];
 
 self.addEventListener('install', (e) => {
