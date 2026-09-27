@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Downloader PWA</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .container { background: #1e293b; padding: 28px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border: 1px solid #334155; }
+    .icon-header { font-size: 3rem; margin-bottom: 10px; }
+    h1 { font-size: 1.5rem; margin-bottom: 8px; color: #38bdf8; font-weight: 700; }
+    p.subtitle { font-size: 0.875rem; color: #94a3b8; margin-bottom: 24px; }
+    input { width: 100%; padding: 14px 16px; border: 1px solid #475569; border-radius: 12px; background: #0f172a; color: #fff; font-size: 1rem; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
+    input:focus { border-color: #38bdf8; }
+    button { width: 100%; padding: 14px; background: #38bdf8; border: none; border-radius: 12px; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    button:active { transform: scale(0.98); background: #0284c7; }
+    #status { margin-top: 20px; font-size: 0.9rem; color: #cbd5e1; word-break: break-word; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="icon-header">📥</div>
+    <h1>Media Downloader</h1>
+    <p class="subtitle">Descarga videos de tus plataformas favoritas</p>
+    <input type="url" id="videoUrl" placeholder="Pega el enlace aquí..." required />
+    <button onclick="procesarVideo()">Descargar Video</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log("Service Worker Registrado"))
+        .catch(err => console.error("Error al registrar SW:", err));
+    }
+
+    async function procesarVideo() {
+      const urlInput = document.getElementById('videoUrl').value.trim();
+      const status = document.getElementById('status');
+
+      if (!urlInput) {
+        status.innerText = "⚠️ Por favor ingresa un enlace válido.";
+        return;
+      }
+
+      status.innerText = "⏳ Procesando enlace...";
+
+      try {
+        const BACKEND_API = "https://tu-backend-ytdlp.onrender.com/download?url=" + encodeURIComponent(urlInput);
+
+        const response = await fetch(BACKEND_API);
+        const data = await response.json();
+
+        if (data.downloadUrl) {
+          status.innerText = "✅ ¡Listo! Iniciando descarga...";
+          window.location.href = data.downloadUrl;
+        } else {
+          status.innerText = "❌ No se pudo obtener el video. Verifica la URL.";
+        }
+      } catch (error) {
+        status.innerText = "⚠️ Error de conexión con el servidor de descargas.";
+      }
+    }
+  </script>
+</body>
+</html>
