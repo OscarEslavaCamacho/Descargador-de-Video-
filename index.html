@@ -31,11 +31,11 @@
     <p id="status"></p>
   </div>
 
-  <script>
+ <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(() => console.log("Service Worker Registrado"))
-        .catch(err => console.error("Error al registrar SW:", err));
+      navigator.serviceWorker.register('./sw.js')
+        .then(() => console.log("SW registrado"))
+        .catch(err => console.error("Error SW:", err));
     }
 
     async function procesarVideo() {
@@ -47,22 +47,28 @@
         return;
       }
 
-      status.innerText = "⏳ Procesando enlace...";
+      status.innerText = "⏳ Procesando enlace con Render...";
 
       try {
-        const BACKEND_API = "https://backend-downloader-cgod.onrender.com/download?url=" + encodeURIComponent(urlInput);
+        const BACKEND_URL = "https://backend-downloader-cgod.onrender.com/download?url=" + encodeURIComponent(urlInput);
+        
+        const response = await fetch(BACKEND_URL);
+        
+        if (!response.ok) {
+          throw new Error("Respuesta del servidor no válida (" + response.status + ")");
+        }
 
-        const response = await fetch(BACKEND_API);
         const data = await response.json();
 
         if (data.downloadUrl) {
-          status.innerText = "✅ ¡Listo! Iniciando descarga...";
-          window.location.href = data.downloadUrl;
+          status.innerText = "✅ ¡Enlace generado! Iniciando descarga...";
+          window.open(data.downloadUrl, '_blank');
         } else {
-          status.innerText = "❌ No se pudo obtener el video. Verifica la URL.";
+          status.innerText = "❌ No se pudo extraer la descarga del enlace provisto.";
         }
       } catch (error) {
-        status.innerText = "⚠️ Error de conexión con el servidor de descargas.";
+        console.error(error);
+        status.innerText = "⚠️ Error de conexión: " + error.message;
       }
     }
   </script>
