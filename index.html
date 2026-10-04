@@ -3,73 +3,209 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Downloader PWA</title>
+  <title>Media Downloader</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#1a202c">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .container { background: #1e293b; padding: 28px; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; border: 1px solid #334155; }
-    .icon-header { font-size: 3rem; margin-bottom: 10px; }
-    h1 { font-size: 1.5rem; margin-bottom: 8px; color: #38bdf8; font-weight: 700; }
-    p.subtitle { font-size: 0.875rem; color: #94a3b8; margin-bottom: 24px; }
-    input { width: 100%; padding: 14px 16px; border: 1px solid #475569; border-radius: 12px; background: #0f172a; color: #fff; font-size: 1rem; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
-    input:focus { border-color: #38bdf8; }
-    button { width: 100%; padding: 14px; background: #38bdf8; border: none; border-radius: 12px; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s, transform 0.1s; }
-    button:active { transform: scale(0.98); background: #0284c7; }
-    #status { margin-top: 20px; font-size: 0.9rem; color: #cbd5e1; word-break: break-word; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 16px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .icon-container {
+      margin-bottom: 16px;
+    }
+
+    .icon-container img {
+      width: 64px;
+      height: 64px;
+    }
+
+    h1 {
+      color: #38bdf8;
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    input[type="url"] {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="url"]:focus {
+      border-color: #38bdf8;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #38bdf8;
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      background-color: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .message.error {
+      display: block;
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .message.info {
+      display: block;
+      background-color: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .message.success {
+      display: block;
+      background-color: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="icon-header">📥</div>
+  <div class="card">
+    <div class="icon-container">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3V15M12 15L7 10M12 15L17 10" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 17V19C4 20.1046 4.89543 21 6 21H18C19.1046 21 20 20.1046 20 19V17" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
     <h1>Media Downloader</h1>
     <p class="subtitle">Descarga videos de tus plataformas favoritas</p>
-    <input type="url" id="videoUrl" placeholder="Pega el enlace aquí..." required />
-    <button onclick="procesarVideo()">Descargar Video</button>
-    <p id="status"></p>
+
+    <div class="input-group">
+      <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." required />
+    </div>
+
+    <button id="downloadBtn" onclick="descargarVideo()">Descargar Video</button>
+
+    <div id="statusMessage" class="message"></div>
   </div>
 
- <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log("SW registrado"))
-        .catch(err => console.error("Error SW:", err));
-    }
-
-    async function procesarVideo() {
+  <script>
+    async function descargarVideo() {
       const urlInput = document.getElementById('videoUrl').value.trim();
-      const status = document.getElementById('status');
+      const statusDiv = document.getElementById('statusMessage');
+      const btn = document.getElementById('downloadBtn');
 
       if (!urlInput) {
-        status.innerText = "⚠️ Por favor ingresa un enlace válido.";
+        mostrarMensaje('Por favor, ingresa una URL válida.', 'error');
         return;
       }
 
-      status.innerText = "⏳ Procesando enlace con Render...";
+      // Nueva URL de tu servidor en Render
+      const BACKEND_BASE = "https://backend-downloader-1.onrender.com/download";
+      const requestUrl = `${BACKEND_BASE}?url=${encodeURIComponent(urlInput)}`;
+
+      // Cambiar estado a cargando
+      btn.disabled = true;
+      btn.innerText = "Procesando...";
+      mostrarMensaje("⏳ Conectando con el servidor...", "info");
 
       try {
-       const BACKEND_URL = "https://backend-downloader-1.onrender.com/download?url=" + encodeURIComponent(urlInput);
-        
-        const response = await fetch(BACKEND_URL);
-        
-        if (!response.ok) {
-          throw new Error("Respuesta del servidor no válida (" + response.status + ")");
-        }
-
+        const response = await fetch(requestUrl);
         const data = await response.json();
 
-        if (data.downloadUrl) {
-          status.innerText = "✅ ¡Enlace generado! Iniciando descarga...";
-          window.open(data.downloadUrl, '_blank');
+        if (response.ok && data.downloadUrl) {
+          mostrarMensaje("🚀 ¡Enlace generado! Iniciando descarga...", "success");
+          
+          // Abre el enlace directo del video para iniciar la descarga
+          window.location.href = data.downloadUrl;
         } else {
-          status.innerText = "❌ No se pudo extraer la descarga del enlace provisto.";
+          const errorMsg = data.error || `Error del servidor (${response.status})`;
+          mostrarMensaje(`⚠️ ${errorMsg}`, "error");
         }
-      } catch (error) {
-        console.error(error);
-        status.innerText = "⚠️ Error de conexión: " + error.message;
+      } catch (err) {
+        mostrarMensaje("⚠️ Error de conexión: No se pudo contactar con el servidor.", "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Descargar Video";
       }
+    }
+
+    function mostrarMensaje(texto, tipo) {
+      const statusDiv = document.getElementById('statusMessage');
+      statusDiv.className = `message ${tipo}`;
+      statusDiv.innerText = texto;
+    }
+
+    // Registrar Service Worker para PWA si existe
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   </script>
 </body>
