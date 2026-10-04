@@ -50,7 +50,7 @@
       status.innerText = "⏳ Procesando enlace...";
 
       try {
-        const BACKEND_API = "https://backend-downloader-cgod.onrender.com" + encodeURIComponent(urlInput);
+        const BACKEND_API = "https://backend-downloader-cgod.onrender.com/download?url=" + encodeURIComponent(urlInput);
 
         const response = await fetch(BACKEND_API);
         const data = await response.json();
